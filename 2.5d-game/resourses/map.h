@@ -210,11 +210,40 @@ class c_map
 	}
 
 	  //
-	 // This gunction generate map
+	 // This gunction generate map using preset num
 	//
-	void generate()
+	//	1 = flat map
+	//
+	void generate(int preset)
 	{
+		int xx = 0;
+		int yy = 0;
+		int zz = 0;
 
+		if(preset == 1)
+		{
+			while(zz <= (max_z / 2))
+			{
+				yy = 0;
+				while(yy != max_y)
+				{
+					xx = 0;
+					while(xx != max_x)
+					{
+						if(zz == (max_z / 2))
+							map_pointer[zz][yy][xx] = 1;
+						else
+							map_pointer[zz][yy][xx] = 0;
+
+						xx++;
+					}
+					yy++;
+				}
+				zz++;
+			}
+		}
+		else
+			printf("{!} Invalid preset num!\n");
 	}
 };
 

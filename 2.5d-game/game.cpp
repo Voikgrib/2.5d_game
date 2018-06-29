@@ -61,9 +61,9 @@ int game_start()
 	Main_clock = &clock;
 	Main_window = &window;
 
-	c_map main_map(5, 5, 5);
+	c_map main_map(15, 15, 15);
 
-	// TEST
+	/*// TEST
 	main_map.map_pointer[2][2][2] = 1;
 	main_map.map_pointer[2][3][2] = 1;
 	main_map.map_pointer[2][4][2] = 1;
@@ -72,8 +72,9 @@ int game_start()
 	main_map.map_pointer[1][4][2] = 0;
 	main_map.map_pointer[2][1][2] = 0;
 	main_map.map_pointer[3][1][2] = 0;
-	// TEST
+	*/// TEST
 
+	main_map.generate(1);
 	main_map.upload_textures();
 
     while(Main_window->isOpen())		// Main sycle
