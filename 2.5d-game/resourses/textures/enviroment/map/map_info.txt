@@ -1,3 +1,4 @@
-2
+3
 resourses/textures/enviroment/map/dirt_block.png
 resourses/textures/enviroment/map/grass_floor.png
+resourses/textures/enviroment/map/stone_block.png

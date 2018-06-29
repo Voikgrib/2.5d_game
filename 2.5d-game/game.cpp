@@ -61,7 +61,7 @@ int game_start()
 	Main_clock = &clock;
 	Main_window = &window;
 
-	c_map main_map(15, 15, 15);
+	c_map main_map(50, 50, 40, "resourses/textures/pointer.png");
 
 	/*// TEST
 	main_map.map_pointer[2][2][2] = 1;
@@ -95,6 +95,20 @@ int game_start()
 				main_map.up();
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::V))
 				main_map.down();
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+				main_map.move('W');
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+				main_map.move('S');
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+				main_map.move('A');
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+				main_map.move('D');
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+				main_map.block_interaction('S');
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+				main_map.block_interaction('B');
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+				main_map.change_type();
 
 			last_press = cur_time;
 		}
