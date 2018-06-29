@@ -67,7 +67,14 @@ int game_start()
 	main_map.map_pointer[2][2][2] = 1;
 	main_map.map_pointer[2][3][2] = 1;
 	main_map.map_pointer[2][4][2] = 1;
+	main_map.map_pointer[1][2][2] = 0;
+	main_map.map_pointer[1][3][2] = 0;
+	main_map.map_pointer[1][4][2] = 0;
+	main_map.map_pointer[2][1][2] = 0;
+	main_map.map_pointer[3][1][2] = 0;
 	// TEST
+
+	main_map.upload_textures();
 
     while(Main_window->isOpen())		// Main sycle
     {

@@ -1,2 +1,3 @@
-0 Dirt_block.png
-1 Grass_floor.png
+2
+resourses/textures/enviroment/map/dirt_block.png
+resourses/textures/enviroment/map/grass_floor.png

@@ -17,9 +17,10 @@ class c_map
 	int cur_x;
 	int cur_y;
 	int cur_z;
+	int max_textures;
 
-	sf::Sprite ****sprite_pointer;
-	sf::Texture *textures;
+	sf::Sprite ***sprite_pointer;
+	sf::Texture *cur_textures;
 	
 	  //
 	 // Constructor & deconstructor
@@ -39,25 +40,25 @@ class c_map
 		int gen_z = 0;
 
 		map_pointer = new int** [max_z];
-		sprite_pointer = new sf::Sprite*** [max_z];
+		sprite_pointer = new sf::Sprite** [max_z];
 
 		while(gen_z != max_z)
 		{
 			map_pointer[gen_z] = new int* [max_y];
-			sprite_pointer[gen_z] = new sf::Sprite** [max_y];
+			sprite_pointer[gen_z] = new sf::Sprite* [max_y];
 
 			gen_y = 0;
 
 			while(gen_y != max_y)
 			{
 				map_pointer[gen_z][gen_y] = new int [max_x];
-				sprite_pointer[gen_z][gen_y] = new sf::Sprite* [max_x];
+				sprite_pointer[gen_z][gen_y] = new sf::Sprite [max_x];
 								
 				gen_x = 0;
 				
 				while(gen_x != max_x)
 				{
-					map_pointer[gen_z][gen_y][gen_x++] = 0;
+					map_pointer[gen_z][gen_y][gen_x++] = -1;
 				}
 				gen_y++;
 			}
@@ -65,47 +66,41 @@ class c_map
 			gen_z++;
 		}
 
-		textures = new sf::Texture [2]; // TEST
-		textures[0].loadFromFile("resourses/textures/enviroment/map/dirt_block.png");
-		textures[1].loadFromFile("resourses/textures/enviroment/map/grass_floor.png");
 	}
 
 	~c_map()
 	{
 		delete [] map_pointer;
-		delete [] textures;
+		delete [] cur_textures;
 	}
 
 	  //
 	 //  FUNCTIONS
 	//
 
+	  //
+	 // Move layer up
+	//
 	void up()
 	{
 		if(cur_z != max_z)
 			cur_z++;
 	}
 
+	  //
+	 // Move layer down
+	//
 	void down()
 	{
 		if(cur_z != 0)
 			cur_z--;
 	}
 
-	void drawing() // TESTED
+	  //
+	 // Draw map
+	//
+	void drawing() // TESTED & WORKED
 	{
-		sf::Sprite sprite_0[500]; // TEST
-		//sf::Sprite sprite_1;
-		int i = 0;
-
-		for(i = 0; i != 500; i++)
-			sprite_0[i].setTexture(textures[0]);
-
-		i = 0;
-			
-
-		//sprite_1.setTexture(textures[1]);
-	
 		int xx = 0;
 		int yy = 0;
 		int zz = 0;
@@ -125,10 +120,12 @@ class c_map
 
 				while(xx != max_x)
 				{
-					sprite_0[i].setPosition(draw_x, draw_y);
-					Main_window->draw(sprite_0[i]);
+					if(map_pointer[zz][yy][xx] != -1)
+					{
+						sprite_pointer[zz][yy][xx].setPosition(draw_x, draw_y);
+						Main_window->draw(sprite_pointer[zz][yy][xx]);
+					}
 
-					i++;
 					draw_x = draw_x + move_x;
 					draw_y = draw_y + move_y;
 					xx++;
@@ -144,6 +141,80 @@ class c_map
 			draw_y = draw_y - move_z;
 			zz++;
 		}
+	}
+
+	  //
+	 // This function upload textures for map
+	//
+	void upload_textures() // TESTED & WORKED
+	{
+		int xx = 0;
+		int yy = 0;
+		int zz = 0;
+		FILE* map_info = fopen("resourses/textures/enviroment/map/map_info.txt","r");
+		int i = 0;
+		int string_size = 100;
+		char string[100] = {};
+		char cur_symbol = 0;
+		int cur_texture = 0;
+		max_textures = 0;
+
+		fscanf(map_info, "%[0-9]", string);
+		max_textures = atoi(string);
+
+		cur_textures = new sf::Texture [max_textures];
+
+		while(cur_texture != max_textures)
+		{
+			i = 0;
+			while(i != string_size)
+				string[i++] = '\0';
+
+			cur_symbol = getc(map_info);
+			while(cur_symbol == ' ' || cur_symbol == '\t' || cur_symbol == '\n')
+				cur_symbol = getc(map_info);
+
+			ungetc(cur_symbol, map_info);
+
+			fscanf(map_info, "%[^\n]", string);
+
+			printf("%s\n\n", string);
+
+			cur_textures[cur_texture].loadFromFile(string);
+			cur_texture++;
+		}
+
+		while(zz != max_z)
+		{
+			yy = 0;
+
+			while(yy != max_y)
+			{
+				xx = 0;
+
+				while(xx != max_x)
+				{
+					cur_texture = map_pointer[zz][yy][xx];
+
+					if(cur_texture != -1)
+						sprite_pointer[zz][yy][xx].setTexture(cur_textures[cur_texture]);
+
+					xx++;
+				}
+				yy++;
+			}
+			zz++;
+		}
+
+		fclose(map_info);
+	}
+
+	  //
+	 // This gunction generate map
+	//
+	void generate()
+	{
+
 	}
 };
 
