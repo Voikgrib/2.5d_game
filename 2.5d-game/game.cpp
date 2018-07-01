@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 
 // GLOBAL CONSTANTS
 sf::RenderWindow *Main_window;
@@ -41,11 +42,6 @@ int main()
 //-----------------------------------------------------------
 int game_start()
 {
-	//int err_code = init_all();
-
-	//if(err_code != 0)
-	//	return err_code;
-
 	float screen_high = 900;
 	float screen_lengh = 1500;
 	float backgr_high = screen_high / 733;
@@ -61,20 +57,9 @@ int game_start()
 	Main_clock = &clock;
 	Main_window = &window;
 
-	c_map main_map(50, 50, 40, "resourses/textures/pointer.png");
+	c_map main_map(50, 50, 50, "resourses/textures/pointer.png");
 
-	/*// TEST
-	main_map.map_pointer[2][2][2] = 1;
-	main_map.map_pointer[2][3][2] = 1;
-	main_map.map_pointer[2][4][2] = 1;
-	main_map.map_pointer[1][2][2] = 0;
-	main_map.map_pointer[1][3][2] = 0;
-	main_map.map_pointer[1][4][2] = 0;
-	main_map.map_pointer[2][1][2] = 0;
-	main_map.map_pointer[3][1][2] = 0;
-	*/// TEST
-
-	main_map.generate(1);
+	main_map.generate(2);
 	main_map.upload_textures();
 
     while(Main_window->isOpen())		// Main sycle

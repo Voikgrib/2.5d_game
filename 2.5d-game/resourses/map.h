@@ -108,7 +108,7 @@ class c_map
 	//
 	void up()
 	{
-		if(cur_z != max_z)
+		if(cur_z != max_z - 1)
 			cur_z++;
 	}
 
@@ -162,11 +162,11 @@ class c_map
 		long int xx = 0;
 		long int yy = 0;
 		long int zz = 0;
-		long int draw_x = 700;
-		long int draw_y = 400;
 		long int move_x = 15;		// TESTED DONT TOUCH
 		long int move_y = 7;		// TESTED DONT TOUCH
 		long int move_z = 16;		// TESTED DONT TOUCH
+		long int draw_x = 750;
+		long int draw_y = 450;
 
 		while(zz < cur_z) // swap to cur_z
 		{
@@ -296,12 +296,23 @@ class c_map
 	 // This gunction generate map using preset num
 	//
 	//	1 = flat map
+	//  2 = hills
 	//
 	void generate(int preset)
 	{
-		int xx = 0;
-		int yy = 0;
-		int zz = 0;
+		long int xx = 0;
+		long int yy = 0;
+		long int zz = 0;
+		long int rand_x = 0;
+		long int rand_y = 0;
+		long int rand_z = 0;
+		long int rand_a = 0;
+		long int rand_b = 0;
+		long int rand_c = 0;	
+		int i = 0;
+		int max_i = 0;
+
+		srand(time(0));
 
 		if(preset == 1)
 		{
@@ -326,6 +337,74 @@ class c_map
 				}
 				zz++;
 			}
+		}
+		else if(preset = 2) // MABY WORKED
+		{
+			while(zz <= (max_z / 3))
+			{
+				yy = 0;
+				while(yy != max_y)
+				{
+					xx = 0;
+					while(xx != max_x)
+					{
+						if(zz == (max_z / 3))
+							map_pointer[zz][yy][xx] = 1;
+						else if(zz < (max_z / 3) && zz > (max_z / 3) - 7)
+							map_pointer[zz][yy][xx] = 0;
+						else if(zz <= (max_z / 3) - 7)
+							map_pointer[zz][yy][xx] = 2;
+
+						xx++;
+					}
+					yy++;
+				}
+				zz++;
+			}
+
+			max_i = max_x * max_y / 400;
+			while(i != max_i)
+			{
+				rand_x = rand() % max_x;
+				rand_y = rand() % max_y;
+				rand_z = (max_z / 3) + (rand() % (max_z / 3));
+
+				rand_a = rand() % 5 + 1;
+				rand_b = rand() % 5 + 1;
+				rand_c = rand() % 5 + 1;
+				
+				zz = rand_z + 2;
+				yy = 0;
+				xx = 0;
+
+				while(zz != (max_z / 3) - 1)
+				{
+					yy = 0;
+					while(yy != max_y)
+					{
+						xx = 0;
+						while(xx != max_x)
+						{
+							//if(xx <= rand_x + (rand_z - zz) && xx >= rand_x - (rand_z - zz) && yy <= rand_y + (rand_z - zz) && yy >= rand_y - (rand_z - zz))
+							if(((rand_x - xx) / rand_b) * ((rand_x - xx) / rand_b) + ((rand_y - yy) / rand_a) * ((rand_y - yy) / rand_a) < (rand_z - zz))	
+								map_pointer[zz][yy][xx] = 2;
+							if(((rand_x - xx) / rand_b) * ((rand_x - xx) / rand_b) + ((rand_y - yy) / rand_a) * ((rand_y - yy) / rand_a) == (rand_z - zz))
+								map_pointer[zz][yy][xx] = 0;								
+							if(((rand_x - xx) / rand_b) * ((rand_x - xx) / rand_b) + ((rand_y - yy) / rand_a) * ((rand_y - yy) / rand_a) == (rand_z - zz) + 1 && map_pointer[zz + 1][yy][xx] == -1)
+								map_pointer[zz][yy][xx] = 1;
+
+							xx++;
+						}
+						yy++;
+					}
+					zz--;
+				}
+
+				map_pointer[rand_z][rand_y][rand_x] = 2;
+
+				i++;
+			}
+
 		}
 		else
 			printf("{!} Invalid preset num!\n");
