@@ -11,6 +11,8 @@
 // GLOBAL CONSTANTS
 sf::RenderWindow *Main_window;
 sf::Clock *Main_clock;
+const float Screen_high = 900;
+const float Screen_lengh = 1500;
 
 //----------------------------------//
 //!     My libs included here      !//
@@ -42,8 +44,8 @@ int main()
 //-----------------------------------------------------------
 int game_start()
 {
-	float screen_high = 900;
-	float screen_lengh = 1500;
+	float screen_high = Screen_high;
+	float screen_lengh = Screen_lengh;
 	float backgr_high = screen_high / 733;
 	float backgr_lengh = screen_lengh / 1100;
 
@@ -57,7 +59,7 @@ int game_start()
 	Main_clock = &clock;
 	Main_window = &window;
 
-	c_map main_map(50, 50, 50, "resourses/textures/pointer.png");
+	c_map main_map(150, 150, 70, "resourses/textures/pointer.png");
 
 	main_map.generate(2);
 	main_map.upload_textures();

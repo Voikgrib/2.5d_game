@@ -156,7 +156,7 @@ class c_map
 	 // Draw map
 	//
 	// 0 - not all visible
-	// 1 - all vizible
+	// 1 - all on layer is vizible
 	void drawing() // TESTED & WORKED Need x = y!
 	{
 		long int xx = 0;
@@ -165,8 +165,8 @@ class c_map
 		long int move_x = 15;		// TESTED DONT TOUCH
 		long int move_y = 7;		// TESTED DONT TOUCH
 		long int move_z = 16;		// TESTED DONT TOUCH
-		long int draw_x = 750;
-		long int draw_y = 450;
+		long int draw_x = 750 + (move_x * (max_x / 2 - cur_x)) - (move_x * (max_y / 2 - cur_y));
+		long int draw_y = 450 + (move_y * (max_x / 2 - cur_x)) + (move_y * (max_y / 2 - cur_y));
 
 		while(zz < cur_z) // swap to cur_z
 		{
@@ -180,9 +180,9 @@ class c_map
 				{
 					if(map_pointer[zz][yy][xx] != -1)
 					{
-						if(type_of_view == 0)
+						if(draw_x >= 0 && draw_y >= 0 && draw_x <= Screen_lengh && draw_y <= Screen_high)
 						{
-							if(xx != 0 && yy != 0 && zz != 0 && xx != max_x - 1 && yy != max_y - 1 && zz != cur_z)
+							if(xx != 0 && yy != 0 && zz != 0 && xx != max_x - 1 && yy != max_y - 1 && zz != cur_z && zz != cur_z - 1)
 							{
 								if(around_is_empty(map_pointer, xx, yy, zz) == true)
 									{
@@ -190,17 +190,30 @@ class c_map
 										Main_window->draw(sprite_pointer[zz][yy][xx]);
 									}
 							}
-							else if(xx == 0 || yy == 0 || zz == 0 || xx == max_x - 1 || yy == max_y - 1 || zz == cur_z)
+							else if(xx != 0 && yy != 0 && zz != 0 && xx != max_x - 1 && yy != max_y - 1 && zz == cur_z - 1)
+							{
+								if(type_of_view == 0 && around_is_empty(map_pointer, xx, yy, zz) == true)
 									{
 										sprite_pointer[zz][yy][xx].setPosition(draw_x, draw_y);
 										Main_window->draw(sprite_pointer[zz][yy][xx]);
 									}
+								else if(type_of_view == 1)
+									{
+										sprite_pointer[zz][yy][xx].setPosition(draw_x, draw_y);
+										Main_window->draw(sprite_pointer[zz][yy][xx]);
+									}
+							}
+							else if(xx == 0 || yy == 0 || zz == 0 || xx == max_x - 1 || yy == max_y - 1 || zz == cur_z)
+							{
+								sprite_pointer[zz][yy][xx].setPosition(draw_x, draw_y);
+								Main_window->draw(sprite_pointer[zz][yy][xx]);
+							}
 						}
-						if(type_of_view == 1)
+						/*if(type_of_view == 1)
 						{
 							sprite_pointer[zz][yy][xx].setPosition(draw_x, draw_y);
 							Main_window->draw(sprite_pointer[zz][yy][xx]);
-						}
+						}*/
 					}
 
 					if(xx == cur_x && yy == cur_y && zz == cur_z - 1)
@@ -340,7 +353,7 @@ class c_map
 		}
 		else if(preset = 2) // MABY WORKED
 		{
-			while(zz <= (max_z / 3))
+			/*while(zz <= (max_z / 3))
 			{
 				yy = 0;
 				while(yy != max_y)
@@ -360,9 +373,9 @@ class c_map
 					yy++;
 				}
 				zz++;
-			}
+			}*/
 
-			max_i = max_x * max_y / 400;
+			max_i = max_x * max_y / 300;
 			while(i != max_i)
 			{
 				rand_x = rand() % max_x;
@@ -377,7 +390,7 @@ class c_map
 				yy = 0;
 				xx = 0;
 
-				while(zz != (max_z / 3) - 1)
+				while(zz != 0)
 				{
 					yy = 0;
 					while(yy != max_y)
