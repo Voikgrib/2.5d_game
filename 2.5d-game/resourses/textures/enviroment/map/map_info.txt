@@ -1,4 +1,6 @@
-3
+5
 resourses/textures/enviroment/map/dirt_block.png
 resourses/textures/enviroment/map/grass_floor.png
 resourses/textures/enviroment/map/stone_block.png
+resourses/textures/enviroment/map/unbreaking_core.png
+resourses/textures/enviroment/map/grass_floor_with_tree.png

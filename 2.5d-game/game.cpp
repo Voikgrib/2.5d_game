@@ -59,7 +59,7 @@ int game_start()
 	Main_clock = &clock;
 	Main_window = &window;
 
-	c_map main_map(150, 150, 70, "resourses/textures/pointer.png");
+	c_map main_map(70, 70, 70, "resourses/textures/pointer.png");
 
 	main_map.generate(2);
 	main_map.upload_textures();

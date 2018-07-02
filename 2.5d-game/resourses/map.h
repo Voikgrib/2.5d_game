@@ -51,7 +51,7 @@ class c_map
 		int gen_z = 0;
 
 		type_of_view_max = 1; // TYPE OF VIEW HERE
-		type_of_view = 0;
+		type_of_view = 1;
 
 		map_pointer = new int** [max_z];
 		sprite_pointer = new sf::Sprite** [max_z];
@@ -166,7 +166,7 @@ class c_map
 		long int move_y = 7;		// TESTED DONT TOUCH
 		long int move_z = 16;		// TESTED DONT TOUCH
 		long int draw_x = 750 + (move_x * (max_x / 2 - cur_x)) - (move_x * (max_y / 2 - cur_y));
-		long int draw_y = 450 + (move_y * (max_x / 2 - cur_x)) + (move_y * (max_y / 2 - cur_y));
+		long int draw_y = max_z * move_z / 2.5 + (move_y * (max_x / 2 - cur_x)) + (move_y * (max_y / 2 - cur_y)) - move_z * (max_z / 2 - cur_z);
 
 		while(zz < cur_z) // swap to cur_z
 		{
@@ -180,7 +180,7 @@ class c_map
 				{
 					if(map_pointer[zz][yy][xx] != -1)
 					{
-						if(draw_x >= 0 && draw_y >= 0 && draw_x <= Screen_lengh && draw_y <= Screen_high)
+						if(draw_x >= -move_z && draw_y >= -move_z * 2 && draw_x <= Screen_lengh && draw_y <= Screen_high)
 						{
 							if(xx != 0 && yy != 0 && zz != 0 && xx != max_x - 1 && yy != max_y - 1 && zz != cur_z && zz != cur_z - 1)
 							{
@@ -353,28 +353,6 @@ class c_map
 		}
 		else if(preset = 2) // MABY WORKED
 		{
-			/*while(zz <= (max_z / 3))
-			{
-				yy = 0;
-				while(yy != max_y)
-				{
-					xx = 0;
-					while(xx != max_x)
-					{
-						if(zz == (max_z / 3))
-							map_pointer[zz][yy][xx] = 1;
-						else if(zz < (max_z / 3) && zz > (max_z / 3) - 7)
-							map_pointer[zz][yy][xx] = 0;
-						else if(zz <= (max_z / 3) - 7)
-							map_pointer[zz][yy][xx] = 2;
-
-						xx++;
-					}
-					yy++;
-				}
-				zz++;
-			}*/
-
 			max_i = max_x * max_y / 300;
 			while(i != max_i)
 			{
@@ -416,6 +394,52 @@ class c_map
 				map_pointer[rand_z][rand_y][rand_x] = 2;
 
 				i++;
+			}
+
+			xx = 0;
+			yy = 0;
+			zz = 0;
+
+			while(zz <= max_z)
+			{
+				yy = 0;
+				while(yy != max_y)
+				{
+					xx = 0;
+					while(xx != max_x)
+					{
+						if(zz == 0)
+							map_pointer[zz][yy][xx] = 3;
+						else if(zz < (max_z / 3) && zz > (max_z / 3) - 7 && map_pointer[zz][yy][xx] != 2)
+							map_pointer[zz][yy][xx] = 0;
+						else if(zz <= (max_z / 3) - 7)
+							map_pointer[zz][yy][xx] = 2;
+						else if(zz != 0 && zz != max_z - 1 && map_pointer[zz - 1][yy][xx] == 0 && map_pointer[zz + 1][yy][xx] == -1)
+						{
+							//map_pointer[zz][yy][xx] = 1;
+
+							rand_c = rand() % 10;
+							
+							if(yy != max_y - 1 && map_pointer[zz][yy + 1][xx] == 4)
+								rand_c++;
+							if(yy != 0 && map_pointer[zz][yy - 1][xx] == 4)
+								rand_c++;
+							if(xx != max_x - 1 && map_pointer[zz][yy][xx + 1] == 4)
+								rand_c++;
+							if(xx != 0 && map_pointer[zz][yy][xx - 1] == 4)
+								rand_c++;
+
+							if(rand_c >= 7)
+								map_pointer[zz][yy][xx] = 4;
+							else
+								map_pointer[zz][yy][xx] = 1;
+
+						}
+						xx++;
+					}
+					yy++;
+				}
+				zz++;
 			}
 
 		}
