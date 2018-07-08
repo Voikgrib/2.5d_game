@@ -182,6 +182,15 @@ class c_map
 					{
 						if(draw_x >= -move_z && draw_y >= -move_z * 2 && draw_x <= Screen_lengh && draw_y <= Screen_high)
 						{
+							sprite_pointer[zz][yy][xx].setColor(sf::Color(255, 255, 255));
+
+							if(zz * 5 > 255)
+								sprite_pointer[zz][yy][xx].setColor(sf::Color(0, 0, 0));
+							else if(zz != cur_z - 1)
+								sprite_pointer[zz][yy][xx].setColor(sf::Color(255 + (zz * 5), 255 + (zz * 5), 255 + (zz * 5)));
+							else
+								sprite_pointer[zz][yy][xx].setColor(sf::Color(255, 255, 255));
+
 							if(xx != 0 && yy != 0 && zz != 0 && xx != max_x - 1 && yy != max_y - 1 && zz != cur_z && zz != cur_z - 1)
 							{
 								if(around_is_empty(map_pointer, xx, yy, zz) == true)
