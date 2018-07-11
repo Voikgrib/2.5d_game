@@ -17,6 +17,7 @@ const float Screen_lengh = 1500;
 //----------------------------------//
 //!     My libs included here      !//
 //----------------------------------//
+#include "resourses/map_big_enum.h"
 #include "resourses/init.h"
 #include "resourses/map.h"
 
@@ -59,7 +60,7 @@ int game_start()
 	Main_clock = &clock;
 	Main_window = &window;
 
-	c_map main_map(70, 70, 70, "resourses/textures/pointer.png");
+	c_map main_map(80, 80, 110, "resourses/textures/pointer.png");
 
 	main_map.generate(2);
 	main_map.upload_textures();

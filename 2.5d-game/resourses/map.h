@@ -6,7 +6,7 @@
 //!
 //===================================================================
 
-bool around_is_empty(int ***map_pointer, int xx, int yy, int zz);
+bool around_is_block(int ***map_pointer, int xx, int yy, int zz, int num);
 
 class c_map
 {
@@ -184,16 +184,16 @@ class c_map
 						{
 							sprite_pointer[zz][yy][xx].setColor(sf::Color(255, 255, 255));
 
-							if(zz * 5 > 255)
+							if((cur_z - zz) * 10 > 255)
 								sprite_pointer[zz][yy][xx].setColor(sf::Color(0, 0, 0));
 							else if(zz != cur_z - 1)
-								sprite_pointer[zz][yy][xx].setColor(sf::Color(255 + (zz * 5), 255 + (zz * 5), 255 + (zz * 5)));
+								sprite_pointer[zz][yy][xx].setColor(sf::Color(255 + ((zz - cur_z) * 10), 255 + ((zz - cur_z) * 10), 255 + ((zz - cur_z) * 10))); // need rework (more dark for cur_z - 2 level)
 							else
 								sprite_pointer[zz][yy][xx].setColor(sf::Color(255, 255, 255));
 
 							if(xx != 0 && yy != 0 && zz != 0 && xx != max_x - 1 && yy != max_y - 1 && zz != cur_z && zz != cur_z - 1)
 							{
-								if(around_is_empty(map_pointer, xx, yy, zz) == true)
+								if(around_is_block(map_pointer, xx, yy, zz, air) == true)
 									{
 										sprite_pointer[zz][yy][xx].setPosition(draw_x, draw_y);
 										Main_window->draw(sprite_pointer[zz][yy][xx]);
@@ -201,7 +201,7 @@ class c_map
 							}
 							else if(xx != 0 && yy != 0 && zz != 0 && xx != max_x - 1 && yy != max_y - 1 && zz == cur_z - 1)
 							{
-								if(type_of_view == 0 && around_is_empty(map_pointer, xx, yy, zz) == true)
+								if(type_of_view == 0 && around_is_block(map_pointer, xx, yy, zz, air) == true)
 									{
 										sprite_pointer[zz][yy][xx].setPosition(draw_x, draw_y);
 										Main_window->draw(sprite_pointer[zz][yy][xx]);
@@ -264,9 +264,21 @@ class c_map
 		int cur_texture = 0;
 		max_textures = 0;
 
-		fscanf(map_info, "%[0-9]", string);
-		max_textures = atoi(string);
+		cur_symbol = getc(map_info);
 
+		while(cur_symbol != EOF)
+		{
+			if(cur_symbol == '\n')
+				max_textures++;
+
+			cur_symbol = getc(map_info);
+		} 
+		fclose(map_info);
+		//fscanf(map_info, "%[0-9]", string);
+		//max_textures = atoi(string);
+
+
+		map_info = fopen("resourses/textures/enviroment/map/map_info.txt","r");
 		cur_textures = new sf::Texture [max_textures];
 
 		while(cur_texture != max_textures)
@@ -283,7 +295,7 @@ class c_map
 
 			fscanf(map_info, "%[^\n]", string);
 
-			printf("%s\n\n", string);
+			printf("%s\n", string);
 
 			cur_textures[cur_texture].loadFromFile(string);
 			cur_texture++;
@@ -333,6 +345,7 @@ class c_map
 		long int rand_c = 0;	
 		int i = 0;
 		int max_i = 0;
+		int cur_ore = 0;
 
 		srand(time(0));
 
@@ -347,11 +360,11 @@ class c_map
 					while(xx != max_x)
 					{
 						if(zz == (max_z / 2))
-							map_pointer[zz][yy][xx] = 1;
+							map_pointer[zz][yy][xx] = grass_floor;
 						else if(zz < (max_z / 2) && zz > (max_z / 2) - 7)
-							map_pointer[zz][yy][xx] = 0;
+							map_pointer[zz][yy][xx] = dirt_block;
 						else if(zz <= (max_z / 2) - 7)
-							map_pointer[zz][yy][xx] = 2;
+							map_pointer[zz][yy][xx] = stone_block;
 
 						xx++;
 					}
@@ -385,13 +398,12 @@ class c_map
 						xx = 0;
 						while(xx != max_x)
 						{
-							//if(xx <= rand_x + (rand_z - zz) && xx >= rand_x - (rand_z - zz) && yy <= rand_y + (rand_z - zz) && yy >= rand_y - (rand_z - zz))
 							if(((rand_x - xx) / rand_b) * ((rand_x - xx) / rand_b) + ((rand_y - yy) / rand_a) * ((rand_y - yy) / rand_a) < (rand_z - zz))	
-								map_pointer[zz][yy][xx] = 2;
+								map_pointer[zz][yy][xx] = stone_block;
 							if(((rand_x - xx) / rand_b) * ((rand_x - xx) / rand_b) + ((rand_y - yy) / rand_a) * ((rand_y - yy) / rand_a) == (rand_z - zz))
-								map_pointer[zz][yy][xx] = 0;								
-							if(((rand_x - xx) / rand_b) * ((rand_x - xx) / rand_b) + ((rand_y - yy) / rand_a) * ((rand_y - yy) / rand_a) == (rand_z - zz) + 1 && map_pointer[zz + 1][yy][xx] == -1)
-								map_pointer[zz][yy][xx] = 1;
+								map_pointer[zz][yy][xx] = dirt_block;								
+							if(((rand_x - xx) / rand_b) * ((rand_x - xx) / rand_b) + ((rand_y - yy) / rand_a) * ((rand_y - yy) / rand_a) == (rand_z - zz) + 1 && map_pointer[zz + 1][yy][xx] == air)
+								map_pointer[zz][yy][xx] = grass_floor;
 
 							xx++;
 						}
@@ -400,7 +412,7 @@ class c_map
 					zz--;
 				}
 
-				map_pointer[rand_z][rand_y][rand_x] = 2;
+				//map_pointer[rand_z][rand_y][rand_x] = stone_block;
 
 				i++;
 			}
@@ -418,30 +430,30 @@ class c_map
 					while(xx != max_x)
 					{
 						if(zz == 0)
-							map_pointer[zz][yy][xx] = 3;
+							map_pointer[zz][yy][xx] = unbreaking_core;
 						else if(zz < (max_z / 3) && zz > (max_z / 3) - 7 && map_pointer[zz][yy][xx] != 2)
-							map_pointer[zz][yy][xx] = 0;
+							map_pointer[zz][yy][xx] = dirt_block;
 						else if(zz <= (max_z / 3) - 7)
-							map_pointer[zz][yy][xx] = 2;
-						else if(zz != 0 && zz != max_z - 1 && map_pointer[zz - 1][yy][xx] == 0 && map_pointer[zz + 1][yy][xx] == -1)
+							map_pointer[zz][yy][xx] = stone_block;
+						else if(zz != 0 && zz != max_z - 1 && map_pointer[zz - 1][yy][xx] == 0 && map_pointer[zz + 1][yy][xx] == air)
 						{
 							//map_pointer[zz][yy][xx] = 1;
 
-							rand_c = rand() % 10;
+							rand_c = rand() % 10 + (max_z / 30) - (zz / 15);
 							
-							if(yy != max_y - 1 && map_pointer[zz][yy + 1][xx] == 4)
+							if(yy != max_y - 1 && map_pointer[zz][yy + 1][xx] == grass_floor_with_tree)
 								rand_c++;
-							if(yy != 0 && map_pointer[zz][yy - 1][xx] == 4)
+							if(yy != 0 && map_pointer[zz][yy - 1][xx] == grass_floor_with_tree)
 								rand_c++;
-							if(xx != max_x - 1 && map_pointer[zz][yy][xx + 1] == 4)
+							if(xx != max_x - 1 && map_pointer[zz][yy][xx + 1] == grass_floor_with_tree)
 								rand_c++;
-							if(xx != 0 && map_pointer[zz][yy][xx - 1] == 4)
+							if(xx != 0 && map_pointer[zz][yy][xx - 1] == grass_floor_with_tree)
 								rand_c++;
 
 							if(rand_c >= 7)
-								map_pointer[zz][yy][xx] = 4;
+								map_pointer[zz][yy][xx] = grass_floor_with_tree;
 							else
-								map_pointer[zz][yy][xx] = 1;
+								map_pointer[zz][yy][xx] = grass_floor;
 
 						}
 						xx++;
@@ -451,6 +463,64 @@ class c_map
 				zz++;
 			}
 
+			// ore generation here (+- worked)
+			
+			i = 0;
+			max_i = max_x * max_y * max_z / 5000;
+
+			while(i != max_i)
+			{
+				rand_x = rand() % max_x;
+				rand_y = rand() % max_y;
+				rand_z = rand() % (max_z - 1) + 1;
+				rand_a = rand() % 100;
+	
+				if(map_pointer[rand_z][rand_y][rand_x] == stone_block)
+				{
+					if(rand_a + rand_z >= 70)
+						map_pointer[rand_z][rand_y][rand_x] = coal_ore;
+					if(rand_a + rand_z < 70 && rand_a + rand_z >= 50)
+						map_pointer[rand_z][rand_y][rand_x] = copper_ore;
+					if(rand_a + rand_z < 50)
+						map_pointer[rand_z][rand_y][rand_x] = iron_ore;
+				}
+
+				cur_ore = map_pointer[rand_z][rand_y][rand_x];
+				rand_a = rand() % 10;
+				rand_b = rand() % 10;
+				rand_c = rand() % 3;
+
+				xx = rand_x - rand_a;
+				yy = rand_y - rand_b;
+				zz = rand_z - rand_c;
+
+	
+				while(zz != rand_z + rand_c)
+				{
+					yy = rand_y - rand_b;
+					while(yy != rand_y + rand_b)
+					{
+						xx = rand_x - rand_a;
+						while(xx != rand_x + rand_a)
+						{
+							if(xx >= 0 && xx <= max_x - 1 && yy >= 0 && yy <= max_y - 1 && zz > 0 && zz <= max_z - 1)
+							{
+								if((rand_x - xx) * (rand_x - xx) + (rand_y - yy) * (rand_y - yy) <= (rand_a * rand_b) && (map_pointer[zz][yy][xx] == stone_block))
+									map_pointer[zz][yy][xx] = cur_ore;
+							}
+							xx++;
+						}
+						yy++;
+					}
+					zz++;
+				}
+				i++;
+			}
+
+			// Cave generation here
+
+			// i am lazy			
+
 		}
 		else
 			printf("{!} Invalid preset num!\n");
@@ -458,34 +528,34 @@ class c_map
 };
 
 
-bool around_is_empty(int ***map_pointer, int xx, int yy, int zz)
+bool around_is_block(int ***map_pointer, int xx, int yy, int zz, int num)
 {
-	if(map_pointer[zz - 1][yy][xx] == -1 ||
-	   map_pointer[zz - 1][yy][xx - 1] == -1 ||
-	   map_pointer[zz - 1][yy][xx + 1] == -1 ||
-	   map_pointer[zz - 1][yy - 1][xx] == -1 ||
-	   map_pointer[zz - 1][yy - 1][xx + 1] == -1 ||
-	   map_pointer[zz - 1][yy - 1][xx - 1] == -1 ||
-	   map_pointer[zz - 1][yy + 1][xx] == -1 ||
-	   map_pointer[zz - 1][yy + 1][xx + 1] == -1 ||
-	   map_pointer[zz - 1][yy + 1][xx - 1] == -1 ||	   
-	   map_pointer[zz][yy - 1][xx] == -1 ||
-	   map_pointer[zz][yy - 1][xx - 1] == -1 ||
-	   map_pointer[zz][yy - 1][xx + 1] == -1 ||
-	   map_pointer[zz][yy + 1][xx] == -1 ||
-	   map_pointer[zz][yy + 1][xx - 1] == -1 ||
-	   map_pointer[zz][yy + 1][xx + 1] == -1 ||
-	   map_pointer[zz][yy][xx - 1] == -1 ||
-	   map_pointer[zz][yy][xx + 1] == -1 ||
-	   map_pointer[zz + 1][yy][xx] == -1 ||
-	   map_pointer[zz + 1][yy][xx - 1] == -1 ||
-	   map_pointer[zz + 1][yy][xx + 1] == -1 ||
-	   map_pointer[zz + 1][yy - 1][xx] == -1 ||
-	   map_pointer[zz + 1][yy - 1][xx - 1] == -1 ||
-	   map_pointer[zz + 1][yy - 1][xx + 1] == -1 ||
-	   map_pointer[zz + 1][yy + 1][xx] == -1 ||
-	   map_pointer[zz + 1][yy + 1][xx - 1] == -1 ||
-	   map_pointer[zz + 1][yy + 1][xx + 1] == -1
+	if(map_pointer[zz - 1][yy][xx] == num ||
+	   map_pointer[zz - 1][yy][xx - 1] == num ||
+	   map_pointer[zz - 1][yy][xx + 1] == num ||
+	   map_pointer[zz - 1][yy - 1][xx] == num ||
+	   map_pointer[zz - 1][yy - 1][xx + 1] == num ||
+	   map_pointer[zz - 1][yy - 1][xx - 1] == num ||
+	   map_pointer[zz - 1][yy + 1][xx] == num ||
+	   map_pointer[zz - 1][yy + 1][xx + 1] == num ||
+	   map_pointer[zz - 1][yy + 1][xx - 1] == num ||	   
+	   map_pointer[zz][yy - 1][xx] == num ||
+	   map_pointer[zz][yy - 1][xx - 1] == num ||
+	   map_pointer[zz][yy - 1][xx + 1] == num ||
+	   map_pointer[zz][yy + 1][xx] == num ||
+	   map_pointer[zz][yy + 1][xx - 1] == num ||
+	   map_pointer[zz][yy + 1][xx + 1] == num ||
+	   map_pointer[zz][yy][xx - 1] == num ||
+	   map_pointer[zz][yy][xx + 1] == num ||
+	   map_pointer[zz + 1][yy][xx] == num ||
+	   map_pointer[zz + 1][yy][xx - 1] == num ||
+	   map_pointer[zz + 1][yy][xx + 1] == num ||
+	   map_pointer[zz + 1][yy - 1][xx] == num ||
+	   map_pointer[zz + 1][yy - 1][xx - 1] == num ||
+	   map_pointer[zz + 1][yy - 1][xx + 1] == num ||
+	   map_pointer[zz + 1][yy + 1][xx] == num ||
+	   map_pointer[zz + 1][yy + 1][xx - 1] == num ||
+	   map_pointer[zz + 1][yy + 1][xx + 1] == num
 	  )
 		return true;
 
