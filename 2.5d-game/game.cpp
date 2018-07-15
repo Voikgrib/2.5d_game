@@ -20,6 +20,7 @@ const float Screen_lengh = 1500;
 #include "resourses/map_big_enum.h"
 #include "resourses/init.h"
 #include "resourses/map.h"
+#include "resourses/entity.h"
 
 // FUNCTION DECLARE
 int game_start();
@@ -51,7 +52,7 @@ int game_start()
 	float backgr_lengh = screen_lengh / 1100;
 
 	sf::RenderWindow window(sf::VideoMode(screen_lengh, screen_high), "SHAITAN PROGA");
-	window.setFramerateLimit(25);
+	window.setFramerateLimit(20);
 	sf::Clock clock;
 	sf::Time key_press_cooldown = sf::seconds(0.05f);
 	sf::Time last_press = sf::seconds(0);
