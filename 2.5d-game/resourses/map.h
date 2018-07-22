@@ -6,6 +6,8 @@
 //!
 //===================================================================
 
+const int Out_of_map = -13;
+
 bool around_is_block(int ***map_pointer, int xx, int yy, int zz, int num);
 
 class c_map
@@ -19,7 +21,10 @@ class c_map
 	long int cur_x;
 	long int cur_y;
 	long int cur_z;
+	int cur_draw_x;
+	int cur_draw_y;
 	int max_textures;
+	bool is_camera_free;
 
 	int type_of_view;
 	int type_of_view_max;
@@ -49,6 +54,8 @@ class c_map
 		int gen_x = 0;
 		int gen_y = 0;
 		int gen_z = 0;
+
+		is_camera_free = true;
 
 		type_of_view_max = 1; // TYPE OF VIEW HERE
 		type_of_view = 1;
@@ -91,6 +98,17 @@ class c_map
 	  //
 	 //  FUNCTIONS
 	//
+
+	  //
+	 // This function return block on current coords 
+	//
+	int get_block(int xx, int yy, int zz)
+	{
+		if(xx < 0 || xx >= max_x || yy < 0 || yy >= max_y || zz < 0 || zz >= max_z)
+			return Out_of_map;
+
+		return map_pointer[zz][yy][xx];
+	}
 
 	  //
 	 // This function change type of view
@@ -153,6 +171,31 @@ class c_map
 	}
 
 	  //
+	 //	Swap camera type
+	//
+	void swap_camera_type(void)
+	{
+		if(is_camera_free == true)
+			is_camera_free = false;
+		else
+			is_camera_free = true;
+	}
+
+	  //
+	 // Check is it air or floor?
+	//
+	bool is_num_or_air(int zz, int yy, int xx, int num)
+	{
+		if(zz < 0 || zz >= max_z || xx < 0 || xx >= max_x || yy < 0 || yy >= max_y)
+			return false;
+		if(map_pointer[zz][yy][xx] == num || map_pointer[zz][yy][xx] < 0)
+			return true;
+
+		return false;
+	}
+
+
+	  //
 	 // Draw map
 	//
 	// 0 - not all visible
@@ -168,7 +211,7 @@ class c_map
 		long int draw_x = 750 + (move_x * (max_x / 2 - cur_x)) - (move_x * (max_y / 2 - cur_y));
 		long int draw_y = max_z * move_z / 2.5 + (move_y * (max_x / 2 - cur_x)) + (move_y * (max_y / 2 - cur_y)) - move_z * (max_z / 2 - cur_z);
 
-		while(zz < cur_z) // swap to cur_z
+		while(zz < cur_z)
 		{
 			yy = 0;
 
@@ -225,10 +268,15 @@ class c_map
 						}*/
 					}
 
-					if(xx == cur_x && yy == cur_y && zz == cur_z - 1)
+					if(is_camera_free == true && xx == cur_x && yy == cur_y && zz == cur_z - 1)
 					{
 						pointer_sprite.setPosition(draw_x, draw_y);
 						Main_window->draw(pointer_sprite);
+					}
+					else if(is_camera_free == false && xx == cur_x && yy == cur_y && zz == cur_z - 1)
+					{
+						cur_draw_x = draw_x;
+						cur_draw_y = draw_y;
 					}
 
 					draw_x = draw_x + move_x;
