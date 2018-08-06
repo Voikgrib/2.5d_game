@@ -14,3 +14,6 @@ const int grass_floor_with_tree = 4;
 const int iron_ore = 5;
 const int copper_ore = 6;
 const int coal_ore = 7;
+const int human_house = 8;
+const int human_house_r = 9;
+

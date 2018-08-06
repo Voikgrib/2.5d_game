@@ -157,12 +157,12 @@ class c_map
 	  //
 	 // TEST FUNCTION
 	//
-	void block_interaction(char sym)
+	void block_interaction(char sym, int num)
 	{
 		if(sym == 'S')
 		{
-			map_pointer[cur_z - 1][cur_y][cur_x] = 0;
-			sprite_pointer[cur_z - 1][cur_y][cur_x].setTexture(cur_textures[0]);
+			map_pointer[cur_z - 1][cur_y][cur_x] = num;
+			sprite_pointer[cur_z - 1][cur_y][cur_x].setTexture(cur_textures[num]);
 		}
 		else if(sym == 'B')
 		{

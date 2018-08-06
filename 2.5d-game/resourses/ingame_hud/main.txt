@@ -1,0 +1,11 @@
+resourses/ingame_hud/dirt_block.png
+resourses/ingame_hud/grass_floor.png
+resourses/ingame_hud/stone_block.png
+resourses/ingame_hud/unbreaking_core.png
+resourses/ingame_hud/grass_floor_with_tree.png
+resourses/ingame_hud/iron_ore.png
+resourses/ingame_hud/copper_ore.png
+resourses/ingame_hud/coal_ore.png
+resourses/ingame_hud/human_house.png
+resourses/ingame_hud/human_house_r.png
+resourses/ingame_hud/destroy.png

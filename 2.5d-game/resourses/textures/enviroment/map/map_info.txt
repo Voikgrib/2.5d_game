@@ -6,3 +6,5 @@ resourses/textures/enviroment/map/grass_floor_with_tree.png
 resourses/textures/enviroment/map/iron_ore.png
 resourses/textures/enviroment/map/copper_ore.png
 resourses/textures/enviroment/map/coal_ore.png
+resourses/textures/enviroment/map/human_house.png
+resourses/textures/enviroment/map/human_house_r.png
