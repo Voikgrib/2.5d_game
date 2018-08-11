@@ -6,6 +6,6 @@ resourses/ingame_hud/grass_floor_with_tree.png
 resourses/ingame_hud/iron_ore.png
 resourses/ingame_hud/copper_ore.png
 resourses/ingame_hud/coal_ore.png
-resourses/ingame_hud/human_house.png
-resourses/ingame_hud/human_house_r.png
+resourses/ingame_hud/water_spawn.png
+resourses/ingame_hud/water_5.png
 resourses/ingame_hud/destroy.png

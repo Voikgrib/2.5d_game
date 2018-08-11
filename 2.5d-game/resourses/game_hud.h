@@ -20,9 +20,13 @@ int in_game_hud_func(int cur_slot, hud_c* cur_hud, bool only_move)
 	if(only_move == false)
 		return 0;
 	
-	if(cur_slot != 10)
+	if(cur_slot < 8)
 		Main_map_pointer->block_interaction('S', cur_slot);
-	else
+	else if(cur_slot == 8)
+		Main_map_pointer->block_interaction('S', water_spawn);
+	else if(cur_slot == 9)
+		Main_map_pointer->block_interaction('S', water_5);
+	else 
 		Main_map_pointer->block_interaction('B', air);
 }
 

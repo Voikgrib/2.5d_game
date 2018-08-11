@@ -64,7 +64,9 @@ int game_start()
 	sf::Clock clock;
 	sf::Time key_press_cooldown = sf::seconds(0.05f);
 	sf::Time last_press = sf::seconds(0);
+	sf::Time last_tick = sf::seconds(0);
 	sf::Time cur_time = sf::seconds(0);
+	sf::Time one_tick_time = sf::seconds(0.3f);
 
 	Main_clock = &clock;
 	Main_window = &window;
@@ -94,7 +96,7 @@ int game_start()
     
 	    while (Main_window->pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if(event.type == sf::Event::Closed)
                 Main_window->close();
         }
 
@@ -123,9 +125,9 @@ int game_start()
 
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Period)) // > key
 				main_hud.call('<', &main_hud, in_game_hud_func);
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Comma)) // < key
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Comma))  // < key
 				main_hud.call('>', &main_hud, in_game_hud_func);
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) // Space hey
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))  // Space hey
 				main_hud.call(' ', &main_hud, in_game_hud_func);
 		
 
@@ -133,6 +135,16 @@ int game_start()
 				main_map.change_type();
 
 			last_press = cur_time;
+		}
+
+		if(last_tick + one_tick_time < cur_time)
+//		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		{
+			// Game tick events here
+
+			main_map.tick_run();
+
+			last_tick = cur_time;
 		}
 
 		Main_window->clear();

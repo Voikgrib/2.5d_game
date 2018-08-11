@@ -8,3 +8,11 @@ resourses/textures/enviroment/map/copper_ore.png
 resourses/textures/enviroment/map/coal_ore.png
 resourses/textures/enviroment/map/human_house.png
 resourses/textures/enviroment/map/human_house_r.png
+resourses/textures/enviroment/map/empty_farm.png
+resourses/textures/enviroment/map/water_0.png
+resourses/textures/enviroment/map/water_1.png
+resourses/textures/enviroment/map/water_2.png
+resourses/textures/enviroment/map/water_3.png
+resourses/textures/enviroment/map/water_4.png
+resourses/textures/enviroment/map/water_5.png
+resourses/textures/enviroment/map/water_spawn.png

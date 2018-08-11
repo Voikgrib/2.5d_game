@@ -573,6 +573,130 @@ class c_map
 		else
 			printf("{!} Invalid preset num!\n");
 	}
+
+
+	  //
+	 // Water mecanic here
+	//
+	void tick_run(void)
+	{
+		long int xx = 0;
+		long int yy = 0;
+		long int zz = 0;
+		sf::Sprite cur_s;
+		int cur_water;
+//sf::Sprite ***sprite_pointer;
+
+		while(zz != max_z)
+		{
+			yy = 0;
+			while(yy != max_y)
+			{
+				xx = 0;
+				while(xx != max_x)
+				{
+					if(zz != max_z && map_pointer[zz][yy][xx] == water_spawn)
+							map_pointer[zz + 1][yy][xx] = water_5;	
+
+					if(map_pointer[zz][yy][xx] == water_0)
+					{
+						cur_water = rand() % 4;
+
+						if(cur_water == 0)
+							map_pointer[zz][yy][xx] = air;	
+					}
+
+					if(map_pointer[zz][yy][xx] >= water_1 && map_pointer[zz][yy][xx] <= water_5)
+					{
+						if(zz != 0 && (map_pointer[zz - 1][yy][xx] <= air || map_pointer[zz - 1][yy][xx] == grass_floor))
+						{
+							map_pointer[zz - 1][yy][xx] = map_pointer[zz][yy][xx];
+							map_pointer[zz][yy][xx] = air;
+							sprite_pointer[zz - 1][yy][xx] = sprite_pointer[zz][yy][xx];
+						}
+						else if(zz != 0 && map_pointer[zz - 1][yy][xx] >= water_0 && map_pointer[zz - 1][yy][xx] < water_5)
+						{
+							while(map_pointer[zz - 1][yy][xx] != water_5 && map_pointer[zz][yy][xx] >= water_0)
+							{
+								map_pointer[zz - 1][yy][xx]++;
+								map_pointer[zz][yy][xx]--;
+							}
+	
+							if(map_pointer[zz][yy][xx] < water_0)
+							{
+								map_pointer[zz][yy][xx] = air;
+								sprite_pointer[zz - 1][yy][xx].setTexture(cur_textures[map_pointer[zz - 1][yy][xx]]);
+							}
+							else
+							{
+								sprite_pointer[zz - 1][yy][xx].setTexture(cur_textures[map_pointer[zz - 1][yy][xx]]);
+								sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+							}
+						}
+						else if(xx != 0 && map_pointer[zz][yy][xx] >= water_1 && (map_pointer[zz][yy][xx - 1] <= air || map_pointer[zz][yy][xx - 1] == grass_floor))
+						{
+							map_pointer[zz][yy][xx - 1] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							map_pointer[zz][yy][xx] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							sprite_pointer[zz][yy][xx - 1].setTexture(cur_textures[map_pointer[zz][yy][xx - 1]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+						else if(yy != 0 && map_pointer[zz][yy][xx] >= water_1 && (map_pointer[zz][yy - 1][xx] <= air || map_pointer[zz][yy - 1][xx] == grass_floor))
+						{
+							map_pointer[zz][yy - 1][xx] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							map_pointer[zz][yy][xx] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							sprite_pointer[zz][yy - 1][xx].setTexture(cur_textures[map_pointer[zz][yy - 1][xx]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+						else if(max_y != 0 && map_pointer[zz][yy][xx] >= water_1 && (map_pointer[zz][yy + 1][xx] <= air || map_pointer[zz][yy + 1][xx] == grass_floor))
+						{
+							map_pointer[zz][yy + 1][xx] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							map_pointer[zz][yy][xx] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							sprite_pointer[zz][yy + 1][xx].setTexture(cur_textures[map_pointer[zz][yy + 1][xx]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+						else if(max_x != 0 && map_pointer[zz][yy][xx] >= water_1 && (map_pointer[zz][yy][xx + 1] <= air || map_pointer[zz][yy][xx + 1] == grass_floor))
+						{
+							map_pointer[zz][yy][xx + 1] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							map_pointer[zz][yy][xx] = (map_pointer[zz][yy][xx] - water_0) / 2 + water_0;
+							sprite_pointer[zz][yy][xx + 1].setTexture(cur_textures[map_pointer[zz][yy][xx + 1]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+						else if(xx != 0 && map_pointer[zz][yy][xx - 1] >= water_0 && map_pointer[zz][yy][xx - 1] <= water_5)
+						{
+							map_pointer[zz][yy][xx - 1] = (map_pointer[zz][yy][xx - 1] + map_pointer[zz][yy][xx]) / 2;
+							map_pointer[zz][yy][xx] = map_pointer[zz][yy][xx - 1];
+							sprite_pointer[zz][yy][xx - 1].setTexture(cur_textures[map_pointer[zz][yy][xx - 1]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+						else if(yy != 0 && map_pointer[zz][yy - 1][xx] >= water_0 && map_pointer[zz][yy - 1][xx] <= water_5)
+						{
+							map_pointer[zz][yy - 1][xx] = (map_pointer[zz][yy - 1][xx] + map_pointer[zz][yy][xx]) / 2;
+							map_pointer[zz][yy][xx] = map_pointer[zz][yy - 1][xx];
+							sprite_pointer[zz][yy - 1][xx].setTexture(cur_textures[map_pointer[zz][yy - 1][xx]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+						else if(max_x != 0 && map_pointer[zz][yy][xx + 1] >= water_0 && map_pointer[zz][yy][xx + 1] <= water_5)
+						{
+							map_pointer[zz][yy][xx + 1] = (map_pointer[zz][yy][xx + 1] + map_pointer[zz][yy][xx]) / 2;
+							map_pointer[zz][yy][xx] = map_pointer[zz][yy][xx + 1];
+							sprite_pointer[zz][yy][xx + 1].setTexture(cur_textures[map_pointer[zz][yy][xx + 1]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+						else if(max_y != 0 && map_pointer[zz][yy + 1][xx] >= water_0 && map_pointer[zz][yy + 1][xx] <= water_5)
+						{
+							map_pointer[zz][yy + 1][xx] = (map_pointer[zz][yy][xx] + map_pointer[zz][yy + 1][xx]) / 2;
+							map_pointer[zz][yy][xx] = map_pointer[zz][yy][xx];
+							sprite_pointer[zz][yy + 1][xx].setTexture(cur_textures[map_pointer[zz][yy + 1][xx]]);
+							sprite_pointer[zz][yy][xx].setTexture(cur_textures[map_pointer[zz][yy][xx]]);
+						}
+					}	
+					xx++;
+				}
+				yy++;
+			}
+			zz++;
+		}
+	}
 };
 
 
