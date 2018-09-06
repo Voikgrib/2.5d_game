@@ -24,7 +24,7 @@ int init_screen(void)
 	float backgr_high = screen_high / 733;
 	float backgr_lengh = screen_lengh / 1100;
 
-	sf::RenderWindow window(sf::VideoMode(screen_lengh, screen_high), "SHAITAN PROGA");
+	sf::RenderWindow window(sf::VideoMode(screen_lengh, screen_high), "My super-puper game");
 	window.setFramerateLimit(25);
 
 	Main_window = &window;

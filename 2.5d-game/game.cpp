@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <cstdlib>
 #include <cmath>
+#include <list>
 #include <ctime>
 
 // GLOBAL CONSTANTS
@@ -59,7 +60,7 @@ int game_start()
 	float backgr_high = screen_high / 733;
 	float backgr_lengh = screen_lengh / 1100;
 
-	sf::RenderWindow window(sf::VideoMode(screen_lengh, screen_high), "SHAITAN PROGA");
+	sf::RenderWindow window(sf::VideoMode(screen_lengh, screen_high), "My super-puper game");
 	window.setFramerateLimit(20);
 	sf::Clock clock;
 	sf::Time key_press_cooldown = sf::seconds(0.05f);
